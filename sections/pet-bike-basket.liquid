@@ -1,0 +1,1401 @@
+{% comment %}
+=============================================================
+  RidePaw Pet Adventure Bike Basket — Landing Page Section
+  File: sections/pet-bike-basket.liquid
+
+  Sections:
+    §1  Hero
+    §2  Trust Bar
+    §3  Features Grid ("Why Riders Love It")
+    §4  How It Works
+    §5  Compatibility Callout
+    §6  Lifestyle / Emotional
+    §7  What's In The Box
+    §8  FAQ Accordion
+    §9  Final CTA
+
+  CSS: scoped with .rpb-* prefix, vars at .rpb-root
+  JS:  FAQ accordion + IntersectionObserver scroll-in
+
+  Setup:
+    1. In Theme Customizer → Pages → [your page] → Section settings
+    2. Enter the product handle for your basket product
+    3. Replace [HERO IMAGE] and [LIFESTYLE IMAGE] placeholders with
+       real Shopify hosted image URLs
+=============================================================
+{% endcomment %}
+
+{%- assign lp = all_products[section.settings.product_handle] -%}
+
+{%- style -%}
+/* ============================================================
+   RidePaw Landing Page — Scoped Styles
+   All classes prefixed .rpb- to avoid Dawn theme collisions
+   ============================================================ */
+
+.rpb-root {
+  --rpb-green:      #2D5A27;
+  --rpb-green-dark: #1e3f1b;
+  --rpb-green-light:#eef3ed;
+  --rpb-beige:      #F5ECD7;
+  --rpb-white:      #FAFAF7;
+  --rpb-charcoal:   #2C2C2C;
+  --rpb-gray:       #9a9a9a;
+  --rpb-radius:     10px;
+  --rpb-radius-lg:  16px;
+  --rpb-font:       -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --rpb-shadow:     0 2px 16px rgba(0,0,0,0.08);
+  --rpb-shadow-lg:  0 8px 32px rgba(0,0,0,0.12);
+  --rpb-max-width:  1200px;
+  --rpb-transition: 0.25s ease;
+
+  font-family: var(--rpb-font);
+  color: var(--rpb-charcoal);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- Utilities ---- */
+.rpb-container {
+  max-width: var(--rpb-max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ---- Buttons ---- */
+.rpb-btn {
+  display: inline-block;
+  padding: 14px 32px;
+  border-radius: var(--rpb-radius);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--rpb-transition), transform var(--rpb-transition), box-shadow var(--rpb-transition);
+  border: 2px solid transparent;
+  text-decoration: none;
+  text-align: center;
+  line-height: 1.2;
+  font-family: var(--rpb-font);
+}
+
+.rpb-btn--primary {
+  background: var(--rpb-green);
+  color: #fff;
+  border-color: var(--rpb-green);
+}
+
+.rpb-btn--primary:hover,
+.rpb-btn--primary:focus {
+  background: var(--rpb-green-dark);
+  border-color: var(--rpb-green-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(45,90,39,0.3);
+  color: #fff;
+  text-decoration: none;
+}
+
+.rpb-btn--lg {
+  padding: 18px 48px;
+  font-size: 18px;
+  border-radius: 12px;
+}
+
+/* ---- Scroll-in animation ---- */
+.rpb-animate {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+
+.rpb-animate.rpb-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================================
+   §1 HERO
+   ============================================================ */
+.rpb-hero {
+  background: var(--rpb-white);
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  padding: 80px 0;
+  overflow: hidden;
+}
+
+.rpb-hero__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  align-items: center;
+}
+
+.rpb-hero__copy {
+  flex: 1;
+  max-width: 600px;
+}
+
+.rpb-hero__eyebrow {
+  display: inline-block;
+  background: var(--rpb-green-light);
+  color: var(--rpb-green);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+
+.rpb-hero__headline {
+  font-size: clamp(36px, 5.5vw, 62px);
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--rpb-charcoal);
+  margin: 0 0 20px;
+}
+
+.rpb-hero__headline em {
+  font-style: normal;
+  color: var(--rpb-green);
+}
+
+.rpb-hero__subheadline {
+  font-size: 18px;
+  line-height: 1.65;
+  color: #555;
+  margin: 0 0 32px;
+  max-width: 520px;
+}
+
+.rpb-hero__meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.rpb-hero__price {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--rpb-charcoal);
+}
+
+.rpb-hero__badge {
+  font-size: 13px;
+  color: #666;
+  background: var(--rpb-beige);
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.rpb-hero__actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.rpb-hero__trust-note {
+  font-size: 13px;
+  color: var(--rpb-gray);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 0;
+}
+
+.rpb-hero__image-wrap {
+  flex: 1;
+  width: 100%;
+  max-width: 560px;
+  position: relative;
+}
+
+.rpb-hero__image-wrap::before {
+  content: '';
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  background: var(--rpb-beige);
+  border-radius: 50%;
+  top: -32px;
+  right: -40px;
+  z-index: 0;
+}
+
+.rpb-img-placeholder {
+  background: #e8e4de;
+  border-radius: var(--rpb-radius-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-align: center;
+  padding: 24px;
+  gap: 8px;
+  position: relative;
+  z-index: 1;
+}
+
+.rpb-img-placeholder small {
+  font-size: 12px;
+  opacity: 0.7;
+  font-weight: 400;
+}
+
+.rpb-hero__image-wrap .rpb-img-placeholder {
+  height: 500px;
+}
+
+/* ============================================================
+   §2 TRUST BAR
+   ============================================================ */
+.rpb-trust {
+  background: var(--rpb-green);
+  padding: 0;
+}
+
+.rpb-trust__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.rpb-trust__item {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 28px;
+  position: relative;
+  white-space: nowrap;
+}
+
+.rpb-trust__item + .rpb-trust__item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 20px;
+  width: 1px;
+  background: rgba(255,255,255,0.3);
+}
+
+.rpb-trust__icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   §3 FEATURES GRID
+   ============================================================ */
+.rpb-features {
+  background: var(--rpb-beige);
+  padding: 80px 0;
+}
+
+.rpb-section-header {
+  text-align: center;
+  margin-bottom: 52px;
+}
+
+.rpb-section-label {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--rpb-green);
+  margin-bottom: 12px;
+}
+
+.rpb-section-title {
+  font-size: clamp(26px, 3.5vw, 40px);
+  font-weight: 800;
+  color: var(--rpb-charcoal);
+  margin: 0 0 12px;
+  line-height: 1.2;
+}
+
+.rpb-section-subtitle {
+  font-size: 17px;
+  color: #666;
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.rpb-features__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+.rpb-feature-card {
+  background: var(--rpb-white);
+  border-radius: var(--rpb-radius);
+  padding: 32px 28px;
+  box-shadow: var(--rpb-shadow);
+  border-top: 4px solid var(--rpb-green);
+  transition: transform var(--rpb-transition), box-shadow var(--rpb-transition);
+}
+
+.rpb-feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--rpb-shadow-lg);
+}
+
+.rpb-feature-card__icon {
+  width: 44px;
+  height: 44px;
+  margin-bottom: 18px;
+  color: var(--rpb-green);
+}
+
+.rpb-feature-card__title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--rpb-charcoal);
+  margin: 0 0 10px;
+}
+
+.rpb-feature-card__desc {
+  font-size: 15px;
+  line-height: 1.65;
+  color: #666;
+  margin: 0;
+}
+
+/* ============================================================
+   §4 HOW IT WORKS
+   ============================================================ */
+.rpb-how {
+  background: var(--rpb-white);
+  padding: 80px 0;
+}
+
+.rpb-how__steps {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-top: 52px;
+}
+
+.rpb-how__step {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.rpb-how__num {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  background: var(--rpb-green);
+  color: #fff;
+  font-size: 22px;
+  font-weight: 800;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(45,90,39,0.25);
+}
+
+.rpb-how__step-title {
+  font-size: 19px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: var(--rpb-charcoal);
+  padding-top: 8px;
+}
+
+.rpb-how__step-desc {
+  font-size: 15px;
+  color: #666;
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ============================================================
+   §5 COMPATIBILITY CALLOUT
+   ============================================================ */
+.rpb-compat {
+  background: var(--rpb-beige);
+  padding: 80px 0;
+}
+
+.rpb-compat__box {
+  max-width: 860px;
+  margin: 0 auto;
+  background: var(--rpb-white);
+  border: 2px solid var(--rpb-green);
+  border-radius: var(--rpb-radius-lg);
+  padding: 48px;
+}
+
+.rpb-compat__header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.rpb-compat__emoji {
+  font-size: 40px;
+  margin-bottom: 12px;
+  line-height: 1;
+}
+
+.rpb-compat__title {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--rpb-charcoal);
+  margin: 0 0 8px;
+}
+
+.rpb-compat__sub {
+  font-size: 15px;
+  color: #777;
+  margin: 0;
+}
+
+.rpb-compat__cols {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
+
+.rpb-compat__col-title {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin: 0 0 14px;
+}
+
+.rpb-compat__col--yes .rpb-compat__col-title { color: var(--rpb-green); }
+.rpb-compat__col--no  .rpb-compat__col-title { color: #c0392b; }
+
+.rpb-compat__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rpb-compat__list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 15px;
+  color: var(--rpb-charcoal);
+  line-height: 1.5;
+}
+
+.rpb-compat__check { color: var(--rpb-green); font-weight: 700; flex-shrink: 0; }
+.rpb-compat__x     { color: #c0392b;          font-weight: 700; flex-shrink: 0; }
+
+.rpb-compat__note {
+  margin-top: 28px;
+  padding: 16px 20px;
+  background: var(--rpb-green-light);
+  border-radius: var(--rpb-radius);
+  font-size: 14px;
+  color: #444;
+  line-height: 1.65;
+  font-style: italic;
+  border-left: 3px solid var(--rpb-green);
+}
+
+/* ============================================================
+   §6 LIFESTYLE / EMOTIONAL
+   ============================================================ */
+.rpb-lifestyle {
+  background: var(--rpb-beige);
+  padding: 80px 0;
+}
+
+.rpb-lifestyle__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
+}
+
+.rpb-lifestyle__image {
+  width: 100%;
+}
+
+.rpb-lifestyle__image .rpb-img-placeholder {
+  height: 380px;
+}
+
+.rpb-lifestyle__copy {
+  max-width: 520px;
+}
+
+.rpb-lifestyle__quote {
+  font-size: clamp(22px, 2.8vw, 30px);
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--rpb-charcoal);
+  margin: 12px 0 20px;
+  font-style: italic;
+}
+
+.rpb-lifestyle__body {
+  font-size: 17px;
+  line-height: 1.7;
+  color: #555;
+  margin: 0 0 32px;
+}
+
+/* ============================================================
+   §7 WHAT'S IN THE BOX
+   ============================================================ */
+.rpb-inbox {
+  background: var(--rpb-white);
+  padding: 80px 0;
+  text-align: center;
+}
+
+.rpb-inbox__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin: 40px auto 28px;
+  max-width: 720px;
+  text-align: left;
+}
+
+.rpb-inbox__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px;
+  background: var(--rpb-beige);
+  border-radius: var(--rpb-radius);
+}
+
+.rpb-inbox__icon {
+  font-size: 26px;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.rpb-inbox__name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--rpb-charcoal);
+  margin: 0 0 3px;
+}
+
+.rpb-inbox__qty {
+  font-size: 13px;
+  color: #888;
+  margin: 0;
+}
+
+.rpb-inbox__note {
+  font-size: 14px;
+  color: #777;
+  font-style: italic;
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   §8 FAQ ACCORDION
+   ============================================================ */
+.rpb-faq {
+  background: var(--rpb-beige);
+  padding: 80px 0;
+}
+
+.rpb-faq__list {
+  max-width: 760px;
+  margin: 48px auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rpb-faq-item {
+  background: var(--rpb-white);
+  border-radius: var(--rpb-radius);
+  box-shadow: var(--rpb-shadow);
+  overflow: hidden;
+}
+
+.rpb-faq-trigger {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  gap: 16px;
+  font-family: var(--rpb-font);
+  color: var(--rpb-charcoal);
+}
+
+.rpb-faq-trigger:hover {
+  background: rgba(45,90,39,0.04);
+}
+
+.rpb-faq-question {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--rpb-charcoal);
+  line-height: 1.4;
+}
+
+.rpb-faq-chevron {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  color: var(--rpb-green);
+  transition: transform 0.3s ease;
+}
+
+.rpb-faq-item--open .rpb-faq-chevron {
+  transform: rotate(180deg);
+}
+
+.rpb-faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+
+.rpb-faq-answer-inner {
+  padding: 16px 24px 22px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #555;
+  border-top: 1px solid rgba(0,0,0,0.06);
+}
+
+/* ============================================================
+   §9 FINAL CTA
+   ============================================================ */
+.rpb-cta {
+  background: var(--rpb-green);
+  padding: 100px 0;
+  text-align: center;
+}
+
+.rpb-cta__eyebrow {
+  color: rgba(255,255,255,0.65);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 0 0 16px;
+}
+
+.rpb-cta__headline {
+  font-size: clamp(32px, 4.5vw, 56px);
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 16px;
+  line-height: 1.15;
+}
+
+.rpb-cta__sub {
+  font-size: 18px;
+  color: rgba(255,255,255,0.75);
+  margin: 0 0 40px;
+  line-height: 1.6;
+}
+
+.rpb-cta__form {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.rpb-cta__btn {
+  background: var(--rpb-beige);
+  color: var(--rpb-green);
+  border: 2px solid var(--rpb-beige);
+  font-size: 18px;
+  font-weight: 800;
+  padding: 18px 56px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: var(--rpb-font);
+  transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.rpb-cta__btn:hover,
+.rpb-cta__btn:focus {
+  background: #fff;
+  border-color: #fff;
+  color: var(--rpb-green-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.2);
+}
+
+.rpb-cta__secure {
+  color: rgba(255,255,255,0.5);
+  font-size: 13px;
+  margin: 0;
+}
+
+/* ============================================================
+   RESPONSIVE — 768px+
+   ============================================================ */
+@media (min-width: 768px) {
+  .rpb-features__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .rpb-how__steps {
+    flex-direction: row;
+    gap: 0;
+    align-items: flex-start;
+    position: relative;
+  }
+
+  .rpb-how__step {
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 20px;
+    position: relative;
+  }
+
+  .rpb-how__step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 27px;
+    left: calc(50% + 40px);
+    right: calc(-50% + 40px);
+    height: 2px;
+    border-top: 2px dashed rgba(45,90,39,0.3);
+  }
+
+  .rpb-how__step-title {
+    padding-top: 20px;
+  }
+
+  .rpb-compat__cols {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .rpb-lifestyle__inner {
+    flex-direction: row;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .rpb-lifestyle__image {
+    flex: 1;
+  }
+
+  .rpb-lifestyle__copy {
+    flex: 1;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE — 1024px+
+   ============================================================ */
+@media (min-width: 1024px) {
+  .rpb-hero__inner {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .rpb-hero__copy {
+    max-width: 540px;
+  }
+
+  .rpb-features__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .rpb-inbox__grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ============================================================
+   RESPONSIVE — mobile overrides
+   ============================================================ */
+@media (max-width: 767px) {
+  .rpb-hero {
+    min-height: auto;
+    padding: 56px 0 40px;
+  }
+
+  .rpb-hero__image-wrap::before {
+    display: none;
+  }
+
+  .rpb-hero__image-wrap .rpb-img-placeholder {
+    height: 260px;
+  }
+
+  .rpb-trust__item {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+
+  .rpb-trust__item + .rpb-trust__item::before {
+    display: none;
+  }
+
+  .rpb-compat__box {
+    padding: 28px 20px;
+  }
+
+  .rpb-inbox__grid {
+    grid-template-columns: 1fr;
+    max-width: 380px;
+  }
+
+  .rpb-features,
+  .rpb-how,
+  .rpb-compat,
+  .rpb-lifestyle,
+  .rpb-inbox,
+  .rpb-faq,
+  .rpb-cta {
+    padding: 56px 0;
+  }
+}
+{%- endstyle -%}
+
+<div class="rpb-root">
+
+  {% comment %} ===== §1 HERO ===== {% endcomment %}
+  <section class="rpb-hero" aria-label="Hero">
+    <div class="rpb-container">
+      <div class="rpb-hero__inner">
+
+        <div class="rpb-hero__copy rpb-animate">
+          <span class="rpb-hero__eyebrow">RidePaw &mdash; Pet Adventure Basket</span>
+          <h1 class="rpb-hero__headline">
+            Every Ride Is<br><em>Better With Them.</em>
+          </h1>
+          <p class="rpb-hero__subheadline">
+            The 3-in-1 basket that clips to your handlebar in 60 seconds, detaches as a shoulder bag, and doubles as a car seat booster &mdash; so your small dog or cat can come along for every adventure.
+          </p>
+
+          <div class="rpb-hero__meta">
+            {%- if lp != blank -%}
+              <span class="rpb-hero__price">{{ lp.price | money }}</span>
+              <span class="rpb-hero__badge">Free shipping on orders over $50</span>
+            {%- endif -%}
+          </div>
+
+          <div class="rpb-hero__actions">
+            <a href="{{ lp.url | default: '/collections/all' }}" class="rpb-btn rpb-btn--primary rpb-btn--lg">
+              Shop Now
+            </a>
+          </div>
+
+          <p class="rpb-hero__trust-note">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Fits pets up to 11 lbs &nbsp;&middot;&nbsp; 60-second install &nbsp;&middot;&nbsp; No tools needed
+          </p>
+        </div>
+
+        <div class="rpb-hero__image-wrap rpb-animate">
+          {%- comment -%}
+            HERO IMAGE PLACEHOLDER
+            Replace this div with:
+              <img src="{{ 'your-hero-photo.jpg' | asset_url }}" alt="Small dog riding in RidePaw basket on a bike" loading="eager" width="900" height="1080">
+            Recommended: warm outdoor lifestyle shot, pet in basket on bike. 900×1080px.
+          {%- endcomment -%}
+          <div class="rpb-img-placeholder" aria-hidden="true">
+            <strong>[ HERO IMAGE ]</strong>
+            <small>Lifestyle photo: pet in basket on bike outdoors<br>Recommended: 900 &times; 1080 px</small>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  {% comment %} ===== §2 TRUST BAR ===== {% endcomment %}
+  <div class="rpb-trust" role="region" aria-label="Trust signals">
+    <div class="rpb-container">
+      <ul class="rpb-trust__list" role="list">
+        <li class="rpb-trust__item">
+          <span class="rpb-trust__icon" aria-hidden="true">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+          </span>
+          4.8 Stars &mdash; 150+ Happy Riders
+        </li>
+        <li class="rpb-trust__item">
+          <span class="rpb-trust__icon" aria-hidden="true">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          </span>
+          Ships in 24 Hours
+        </li>
+        <li class="rpb-trust__item">
+          <span class="rpb-trust__icon" aria-hidden="true">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </span>
+          60-Second Installation
+        </li>
+        <li class="rpb-trust__item">
+          <span class="rpb-trust__icon" aria-hidden="true">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </span>
+          Safety-Tested for Pets Up to 11 lbs
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  {% comment %} ===== §3 FEATURES GRID ===== {% endcomment %}
+  <section class="rpb-features" aria-label="Product features">
+    <div class="rpb-container">
+      <header class="rpb-section-header">
+        <div class="rpb-section-label">Built for Every Ride</div>
+        <h2 class="rpb-section-title">Why Riders Love It</h2>
+        <p class="rpb-section-subtitle">Six features designed so your adventure never has to leave anyone behind.</p>
+      </header>
+
+      <div class="rpb-features__grid">
+
+        <div class="rpb-feature-card rpb-animate">
+          <svg class="rpb-feature-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+          </svg>
+          <h3 class="rpb-feature-card__title">Quick-Release Mount</h3>
+          <p class="rpb-feature-card__desc">Clips onto your handlebar in 60 seconds &mdash; no tools, no fuss. The spring-loaded quick-release bracket means setup and takedown happen before your coffee gets cold.</p>
+        </div>
+
+        <div class="rpb-feature-card rpb-animate">
+          <svg class="rpb-feature-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <h3 class="rpb-feature-card__title">Dual-Lock Security</h3>
+          <p class="rpb-feature-card__desc">A satisfying audible click confirms the basket is locked in on both sides. Stays rock-solid over cobblestones, bumps, and trail roots &mdash; no wobble, no anxiety.</p>
+        </div>
+
+        <div class="rpb-feature-card rpb-animate">
+          <svg class="rpb-feature-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+          </svg>
+          <h3 class="rpb-feature-card__title">Breathable Mesh Window</h3>
+          <p class="rpb-feature-card__desc">A full-panel mesh window keeps air flowing and lets your pet watch the world go by. You stay connected with constant eye contact &mdash; they stay cool and curious.</p>
+        </div>
+
+        <div class="rpb-feature-card rpb-animate">
+          <svg class="rpb-feature-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/>
+          </svg>
+          <h3 class="rpb-feature-card__title">Built-in Safety Tether</h3>
+          <p class="rpb-feature-card__desc">An adjustable 15.5-inch internal seatbelt clips to your pet's harness (never the collar). Even if they stand up mid-ride, they stay safely inside the basket.</p>
+        </div>
+
+        <div class="rpb-feature-card rpb-animate">
+          <svg class="rpb-feature-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/>
+          </svg>
+          <h3 class="rpb-feature-card__title">3-in-1 Versatility</h3>
+          <p class="rpb-feature-card__desc">Handlebar basket on the bike, detachable shoulder bag for the farmers market, car seat booster on the drive home. One purchase, three daily uses.</p>
+        </div>
+
+        <div class="rpb-feature-card rpb-animate">
+          <svg class="rpb-feature-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>
+          </svg>
+          <h3 class="rpb-feature-card__title">Folds Flat</h3>
+          <p class="rpb-feature-card__desc">Remove the aluminum frame, zip the basket closed, and it slips under a bed or into a closet. Apartment-friendly storage for the days between rides.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  {% comment %} ===== §4 HOW IT WORKS ===== {% endcomment %}
+  <section class="rpb-how" aria-label="How it works">
+    <div class="rpb-container">
+      <header class="rpb-section-header">
+        <div class="rpb-section-label">Get Rolling Fast</div>
+        <h2 class="rpb-section-title">Up and Riding in 3 Steps</h2>
+        <p class="rpb-section-subtitle">From box to bike in under two minutes. No YouTube tutorials required.</p>
+      </header>
+
+      <div class="rpb-how__steps">
+
+        <div class="rpb-how__step rpb-animate">
+          <div class="rpb-how__num" aria-hidden="true">1</div>
+          <div>
+            <h3 class="rpb-how__step-title">Clip the Mount</h3>
+            <p class="rpb-how__step-desc">Slide the handlebar bracket onto your bar and tighten the included screws. The whole thing takes about 60 seconds and you&rsquo;ll only ever do it once.</p>
+          </div>
+        </div>
+
+        <div class="rpb-how__step rpb-animate">
+          <div class="rpb-how__num" aria-hidden="true">2</div>
+          <div>
+            <h3 class="rpb-how__step-title">Click the Basket In</h3>
+            <p class="rpb-how__step-desc">Set the basket onto the bracket and press down until you hear the dual-lock click. That sound means it&rsquo;s locked. Give it a shake &mdash; it won&rsquo;t budge.</p>
+          </div>
+        </div>
+
+        <div class="rpb-how__step rpb-animate">
+          <div class="rpb-how__num" aria-hidden="true">3</div>
+          <div>
+            <h3 class="rpb-how__step-title">Buckle Up and Ride</h3>
+            <p class="rpb-how__step-desc">Pop your pet in, clip the safety tether to their harness, zip the lid, and go. Your best friend is ready for the adventure.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  {% comment %} ===== §5 COMPATIBILITY CALLOUT ===== {% endcomment %}
+  <section class="rpb-compat" aria-label="Bike compatibility">
+    <div class="rpb-container">
+      <div class="rpb-compat__box rpb-animate">
+
+        <div class="rpb-compat__header">
+          <div class="rpb-compat__emoji" aria-hidden="true">&#x1F6B2;</div>
+          <h2 class="rpb-compat__title">Will It Fit Your Bike?</h2>
+          <p class="rpb-compat__sub">Most city, mountain, and cruiser bikes work great. Here&rsquo;s the quick check:</p>
+        </div>
+
+        <div class="rpb-compat__cols">
+
+          <div class="rpb-compat__col rpb-compat__col--yes">
+            <p class="rpb-compat__col-title">&#10003; Works With</p>
+            <ul class="rpb-compat__list" role="list">
+              <li><span class="rpb-compat__check" aria-hidden="true">&#10003;</span> Mountain bikes</li>
+              <li><span class="rpb-compat__check" aria-hidden="true">&#10003;</span> City / hybrid bikes</li>
+              <li><span class="rpb-compat__check" aria-hidden="true">&#10003;</span> Cruiser bikes</li>
+              <li><span class="rpb-compat__check" aria-hidden="true">&#10003;</span> Handlebars up to 1.26 in (3.2 cm) diameter</li>
+              <li><span class="rpb-compat__check" aria-hidden="true">&#10003;</span> Stems with a screw mount</li>
+            </ul>
+          </div>
+
+          <div class="rpb-compat__col rpb-compat__col--no">
+            <p class="rpb-compat__col-title">&#10007; Does Not Fit</p>
+            <ul class="rpb-compat__list" role="list">
+              <li><span class="rpb-compat__x" aria-hidden="true">&#10007;</span> E-bikes (motor vibration)</li>
+              <li><span class="rpb-compat__x" aria-hidden="true">&#10007;</span> Road / drop-bar bikes</li>
+              <li><span class="rpb-compat__x" aria-hidden="true">&#10007;</span> Handlebars wider than 1.26 in (3.2 cm)</li>
+              <li><span class="rpb-compat__x" aria-hidden="true">&#10007;</span> Stems without a screw mount</li>
+            </ul>
+          </div>
+
+        </div>
+
+        <p class="rpb-compat__note">
+          <strong>Before you order:</strong> Measure your handlebar diameter &mdash; it must be 1.26 inches (3.2 cm) or less. Also confirm there is at least 11.8 inches (30 cm) of clearance between your stem and front wheel. Not sure? Your local bike shop can check in two minutes.
+        </p>
+
+      </div>
+    </div>
+  </section>
+
+  {% comment %} ===== §6 LIFESTYLE / EMOTIONAL ===== {% endcomment %}
+  <section class="rpb-lifestyle" aria-label="Lifestyle">
+    <div class="rpb-container">
+      <div class="rpb-lifestyle__inner">
+
+        <div class="rpb-lifestyle__image rpb-animate">
+          {%- comment -%}
+            LIFESTYLE IMAGE PLACEHOLDER
+            Replace this div with:
+              <img src="{{ 'your-lifestyle-photo.jpg' | asset_url }}" alt="Cyclist at farmers market with pet in RidePaw basket" loading="lazy" width="800" height="640">
+            Recommended: warm outdoor scene, farmers market or park trail. 800x640px.
+          {%- endcomment -%}
+          <div class="rpb-img-placeholder" aria-hidden="true">
+            <strong>[ LIFESTYLE IMAGE ]</strong>
+            <small>Suggested: rider at farmers market or park trail with pet<br>Recommended: 800 &times; 640 px</small>
+          </div>
+        </div>
+
+        <div class="rpb-lifestyle__copy rpb-animate">
+          <div class="rpb-section-label">Made for Real Life</div>
+          <blockquote class="rpb-lifestyle__quote">
+            &ldquo;Weekend mornings. Farmers market runs. Park trails. Whatever the destination, they belong beside you.&rdquo;
+          </blockquote>
+          <p class="rpb-lifestyle__body">
+            Small pets don&rsquo;t have to wait at home. Whether it&rsquo;s a quick spin around the block or a full morning adventure, the RidePaw basket gives your dog or cat a safe, comfortable seat right up front &mdash; where they can feel the breeze and watch the world with you.
+          </p>
+          <a href="{{ lp.url | default: '/collections/all' }}" class="rpb-btn rpb-btn--primary">
+            Bring Them Along &rarr;
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  {% comment %} ===== §7 WHAT'S IN THE BOX ===== {% endcomment %}
+  <section class="rpb-inbox" aria-label="What's in the box">
+    <div class="rpb-container">
+      <header class="rpb-section-header">
+        <div class="rpb-section-label">Everything You Need</div>
+        <h2 class="rpb-section-title">What&rsquo;s In The Box</h2>
+        <p class="rpb-section-subtitle">One box. Everything included. Zero trips to the hardware store.</p>
+      </header>
+
+      <div class="rpb-inbox__grid rpb-animate">
+
+        <div class="rpb-inbox__item">
+          <span class="rpb-inbox__icon" role="img" aria-label="Basket">&#x1F9FA;</span>
+          <div>
+            <p class="rpb-inbox__name">Bike Basket</p>
+            <p class="rpb-inbox__qty">1&times; with removable inner pad</p>
+          </div>
+        </div>
+
+        <div class="rpb-inbox__item">
+          <span class="rpb-inbox__icon" role="img" aria-label="Mount bracket">&#x1F527;</span>
+          <div>
+            <p class="rpb-inbox__name">Handlebar Mount Bracket</p>
+            <p class="rpb-inbox__qty">1&times; quick-release bracket</p>
+          </div>
+        </div>
+
+        <div class="rpb-inbox__item">
+          <span class="rpb-inbox__icon" role="img" aria-label="Screws">&#x1F529;</span>
+          <div>
+            <p class="rpb-inbox__name">Mounting Screws</p>
+            <p class="rpb-inbox__qty">4&times; screws included</p>
+          </div>
+        </div>
+
+        <div class="rpb-inbox__item">
+          <span class="rpb-inbox__icon" role="img" aria-label="Spacers">&#x2699;&#xFE0F;</span>
+          <div>
+            <p class="rpb-inbox__name">Handlebar Spacers</p>
+            <p class="rpb-inbox__qty">8&times; spacers for a perfect fit</p>
+          </div>
+        </div>
+
+      </div>
+
+      <p class="rpb-inbox__note">Every unit is factory-sealed and parts-verified before shipping &mdash; if anything is missing, we&rsquo;ll make it right.</p>
+    </div>
+  </section>
+
+  {% comment %} ===== §8 FAQ ACCORDION ===== {% endcomment %}
+  <section class="rpb-faq" aria-label="Frequently asked questions">
+    <div class="rpb-container">
+      <header class="rpb-section-header">
+        <div class="rpb-section-label">Good Questions</div>
+        <h2 class="rpb-section-title">Frequently Asked Questions</h2>
+      </header>
+
+      <div class="rpb-faq__list">
+
+        <div class="rpb-faq-item">
+          <button class="rpb-faq-trigger" aria-expanded="false" aria-controls="rpb-faq-1" id="rpb-faq-1-btn">
+            <span class="rpb-faq-question">What size pets fit in this basket?</span>
+            <svg class="rpb-faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="rpb-faq-answer" id="rpb-faq-1" role="region" aria-labelledby="rpb-faq-1-btn">
+            <div class="rpb-faq-answer-inner">
+              The basket is designed for pets up to 11 lbs (5 kg) &mdash; think Chihuahuas, Yorkshire Terriers, Maltese, small cats, and similarly-sized companions. The interior measures 32 &times; 24 cm (roughly 12.6 &times; 9.4 inches). As a rule of thumb: if your pet can comfortably sit or curl up in a medium tote bag, they&rsquo;ll love it in here.
+            </div>
+          </div>
+        </div>
+
+        <div class="rpb-faq-item">
+          <button class="rpb-faq-trigger" aria-expanded="false" aria-controls="rpb-faq-2" id="rpb-faq-2-btn">
+            <span class="rpb-faq-question">Will this fit my bike?</span>
+            <svg class="rpb-faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="rpb-faq-answer" id="rpb-faq-2" role="region" aria-labelledby="rpb-faq-2-btn">
+            <div class="rpb-faq-answer-inner">
+              The RidePaw works with mountain, city, hybrid, and cruiser bikes. Your handlebar diameter must be 1.26 inches (3.2 cm) or less, and your stem needs a screw mount for the bracket to attach. You&rsquo;ll also need at least 11.8 inches (30 cm) of clearance between the stem and your front wheel. It is <strong>not</strong> compatible with e-bikes or drop-bar road bikes.
+            </div>
+          </div>
+        </div>
+
+        <div class="rpb-faq-item">
+          <button class="rpb-faq-trigger" aria-expanded="false" aria-controls="rpb-faq-3" id="rpb-faq-3-btn">
+            <span class="rpb-faq-question">Is the basket waterproof?</span>
+            <svg class="rpb-faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="rpb-faq-answer" id="rpb-faq-3" role="region" aria-labelledby="rpb-faq-3-btn">
+            <div class="rpb-faq-answer-inner">
+              The basket is made from 600D Oxford fabric, which is highly water-resistant &mdash; light rain and splashes bead right off. It&rsquo;s not designed for heavy downpours or submersion. If you&rsquo;re caught in a storm, zip the lid closed; the interior will stay dry for a reasonable time. For heavy rain days, we&rsquo;d suggest keeping the ride short.
+            </div>
+          </div>
+        </div>
+
+        <div class="rpb-faq-item">
+          <button class="rpb-faq-trigger" aria-expanded="false" aria-controls="rpb-faq-4" id="rpb-faq-4-btn">
+            <span class="rpb-faq-question">Can I use this as a bag when I&rsquo;m not cycling?</span>
+            <svg class="rpb-faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="rpb-faq-answer" id="rpb-faq-4" role="region" aria-labelledby="rpb-faq-4-btn">
+            <div class="rpb-faq-answer-inner">
+              Absolutely &mdash; that&rsquo;s one of its best features. The basket detaches from the mount bracket in seconds and has a built-in shoulder strap, so you can carry it into a caf&eacute;, vet&rsquo;s office, or farmers market stall. It also works as a car seat booster, giving your pet a raised, secure perch on drives.
+            </div>
+          </div>
+        </div>
+
+        <div class="rpb-faq-item">
+          <button class="rpb-faq-trigger" aria-expanded="false" aria-controls="rpb-faq-5" id="rpb-faq-5-btn">
+            <span class="rpb-faq-question">How do I clean it?</span>
+            <svg class="rpb-faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="rpb-faq-answer" id="rpb-faq-5" role="region" aria-labelledby="rpb-faq-5-btn">
+            <div class="rpb-faq-answer-inner">
+              For the outer shell, a damp cloth and mild soap is all you need &mdash; the Oxford fabric wipes clean easily. Remove the inner pad (it simply lifts out) and either hand-wash it or pop it in the washing machine on a gentle cold cycle. Let both air dry fully before reassembling.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  {% comment %} ===== §9 FINAL CTA ===== {% endcomment %}
+  <section class="rpb-cta" aria-label="Purchase call to action">
+    <div class="rpb-container">
+      <p class="rpb-cta__eyebrow">Ready to ride?</p>
+      <h2 class="rpb-cta__headline">Your Next Ride Starts Here.</h2>
+      <p class="rpb-cta__sub">Free yourself from pet-sitters. Take your best friend along for the adventure.</p>
+
+      {%- if lp != blank -%}
+        <form action="/cart/add" method="post" class="rpb-cta__form">
+          <input type="hidden" name="id" value="{{ lp.variants.first.id }}">
+          <input type="hidden" name="quantity" value="1">
+          <button type="submit" class="rpb-cta__btn">
+            Add to Cart &mdash; {{ lp.price | money }}
+          </button>
+        </form>
+        <p class="rpb-cta__secure" style="margin-top:16px">
+          &#x1F512; Secure checkout &nbsp;&middot;&nbsp; Free returns &nbsp;&middot;&nbsp; Ships in 24 hours
+        </p>
+      {%- else -%}
+        <a href="/collections/all" class="rpb-cta__btn">Shop Now</a>
+        <p class="rpb-cta__secure" style="margin-top:16px">
+          &#x1F512; Secure checkout &nbsp;&middot;&nbsp; Free returns
+        </p>
+        {%- comment -%}
+          SETUP REQUIRED: Enter your product handle in the section settings via
+          Theme Customizer to enable the live Add to Cart button and pricing.
+        {%- endcomment -%}
+      {%- endif -%}
+    </div>
+  </section>
+
+</div><!-- /.rpb-root -->
+
+{% comment %} ===== JAVASCRIPT ===== {% endcomment %}
+<script>
+(function () {
+  'use strict';
+
+  /* ---- FAQ Accordion ---- */
+  var faqItems = document.querySelectorAll('.rpb-faq-item');
+
+  faqItems.forEach(function (item) {
+    var trigger = item.querySelector('.rpb-faq-trigger');
+    var answer  = item.querySelector('.rpb-faq-answer');
+    if (!trigger || !answer) return;
+
+    trigger.addEventListener('click', function () {
+      var isOpen = item.classList.contains('rpb-faq-item--open');
+
+      /* Close all others */
+      faqItems.forEach(function (other) {
+        if (other === item) return;
+        other.classList.remove('rpb-faq-item--open');
+        var otherTrigger = other.querySelector('.rpb-faq-trigger');
+        var otherAnswer  = other.querySelector('.rpb-faq-answer');
+        if (otherTrigger) otherTrigger.setAttribute('aria-expanded', 'false');
+        if (otherAnswer)  otherAnswer.style.maxHeight = null;
+      });
+
+      /* Toggle current */
+      if (isOpen) {
+        item.classList.remove('rpb-faq-item--open');
+        trigger.setAttribute('aria-expanded', 'false');
+        answer.style.maxHeight = null;
+      } else {
+        item.classList.add('rpb-faq-item--open');
+        trigger.setAttribute('aria-expanded', 'true');
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+      }
+    });
+  });
+
+  /* ---- Scroll-in animations (IntersectionObserver) ---- */
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('rpb-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.rpb-animate').forEach(function (el) {
+      io.observe(el);
+    });
+  } else {
+    /* Fallback for older browsers: show everything immediately */
+    document.querySelectorAll('.rpb-animate').forEach(function (el) {
+      el.classList.add('rpb-visible');
+    });
+  }
+
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Pet Bike Basket Landing",
+  "tag": "section",
+  "class": "rpb-root",
+  "settings": [
+    {
+      "type": "text",
+      "id": "product_handle",
+      "label": "Product Handle",
+      "info": "Enter the handle of your Pet Adventure Bike Basket product. Find it in the product URL in Shopify Admin (e.g. 'ridepaw-pet-bike-basket')."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Pet Bike Basket Landing"
+    }
+  ]
+}
+{% endschema %}

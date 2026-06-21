@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "main": {
+      "type": "pet-bike-basket",
+      "settings": {
+        "product_handle": ""
+      }
+    }
+  },
+  "order": ["main"]
+}

@@ -1291,7 +1291,7 @@
       <p class="rpb-cta__sub">Free yourself from pet-sitters. Take your best friend along for the adventure.</p>
 
       {%- if lp != blank -%}
-        <form action="/cart/add" method="post" class="rpb-cta__form">
+        <form action="/routes.cart/add" method="post" class="rpb-cta__form">
           <input type="hidden" name="id" value="{{ lp.variants.first.id }}">
           <input type="hidden" name="quantity" value="1">
           <button type="submit" class="rpb-cta__btn">
@@ -1302,7 +1302,7 @@
           &#x1F512; Secure checkout &nbsp;&middot;&nbsp; Free returns &nbsp;&middot;&nbsp; Ships in 24 hours
         </p>
       {%- else -%}
-        <a href="/collections/all" class="rpb-cta__btn">Shop Now</a>
+        <a href="/routescollections/all" class="rpb-cta__btn">Shop Now</a>
         <p class="rpb-cta__secure" style="margin-top:16px">
           &#x1F512; Secure checkout &nbsp;&middot;&nbsp; Free returns
         </p>
@@ -1381,7 +1381,7 @@
 
 {% schema %}
 {
-  
+
   "name": "Pet Bike Basket Landing",
   "tag": "section",
   "settings": [
